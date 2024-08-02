@@ -12,7 +12,8 @@ from mysql.connector import connection
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
 
 
-def filter_datum(fields: List[str], redaction: str, message: str, separator: str) -> str:
+def filter_datum(fields: List[str],
+                 edaction: str, message: str, separator: str) -> str:
     """
     Returns the log message obfuscated
     """
@@ -51,7 +52,6 @@ def get_db() -> connection.MySQLConnection:
 
 
 def main():
-    
     db = get_db()
     cursor = db.cursor()
     cursor.execute("SELECT * FROM users")
@@ -65,8 +65,9 @@ def main():
                 message += ";"
         logger.info(message)
     cursor.close()
-    db.close()  
+    db.close()
     return None
+
 
 if __name__ == '__main__':
     main()

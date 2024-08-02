@@ -25,4 +25,3 @@ if __name__ == '__main__':
     print(hashed_password)
     print(is_valid(hashed_password, password))
     print(is_valid(hashed_password, "eggs"))
-    
