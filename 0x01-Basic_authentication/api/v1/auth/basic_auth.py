@@ -4,6 +4,7 @@ import base64
 from typing import Tuple
 from api.v1.auth.auth import Auth
 from models.user import User
+from typing import TypeVar
 
 
 class BasicAuth(Auth):
@@ -88,7 +89,7 @@ class BasicAuth(Auth):
 
         return None
 
-    def current_user(self, request=None) -> TypeVar('User'):
+    def current_user(self, request=None) -> User:
         """get current user"""
         try:
             auth_header = self.authorization_header(request)
