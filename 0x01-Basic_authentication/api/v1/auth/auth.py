@@ -7,6 +7,7 @@ from models.user import User
 from os import getenv
 from typing import List, Type
 
+
 class Auth:
     """ Auth class
     """
@@ -25,6 +26,6 @@ class Auth:
         """ current_user
         """
         if self.authorization_header(request) is None:
-            return None
+            return None  
         else:
             User().search({'id': 1})
