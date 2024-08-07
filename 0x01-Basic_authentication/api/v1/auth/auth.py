@@ -29,3 +29,16 @@ class Auth:
             return None  
         else:
             User().search({'id': 1})
+            return User()
+        
+    def authorization_header(
+            self,
+            request=None
+            ) -> str:
+        '''Auth header
+        '''
+        if request is None:
+            return None
+
+        return request.headers.get('Authorization')
+    
