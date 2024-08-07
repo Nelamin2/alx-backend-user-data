@@ -28,3 +28,15 @@ class Auth:
             return None
         else:
             User().search({'id': 1})
+            
+    def authorization_header(self, request=None) -> str:
+        """ Get the authorization header from the request.
+        """
+        if request is None or request.headers.get('Authorization') is None:
+            return None
+        return request.headers.get('Authorization')
+            
+        
+    user = current_user(request)
+    auth_header = authorization_header(request)
+
