@@ -4,6 +4,7 @@ import base64
 from typing import Tuple, TypeVar
 from api.v1.auth.auth import Auth
 from models.user import User
+from typing import Type
 
 
 class BasicAuth(Auth):
@@ -50,21 +51,43 @@ class BasicAuth(Auth):
             return None
 
 
-def extract_user_credentials(self, decoded_base64_authorization_header: str) -> (str, str):
-        # Check if decoded_base64_authorization_header is None
-        if decoded_base64_authorization_header is None:
+def extract_user_credentials(
+    self,
+    decoded_base64_authorization_header: str
+    ) -> Tuple[str, str]:
+        """extracts user email and password
+        from the Base64 decoded value.
+        Args:
+            self (obj): Basic Auth instance
+            decoded_base64_authorization_header (str): auth header
+        """
+        if not (decoded_base64_authorization_header and
+                isinstance(decoded_base64_authorization_header, str) and
+                ':' in decoded_base64_authorization_header):
             return None, None
-        
-        # Check if decoded_base64_authorization_header is a string
-        if not isinstance(decoded_base64_authorization_header, str):
-            return None, None
-        
-        # Check if the header contains ':'
-        if ':' not in decoded_base64_authorization_header:
-            return None, None
-        
-        # Split the string by ':'
-        user_credentials = tuple (decoded_base64_authorization_header.split(':', 1))
-        
-        # Return user email and password
-        return  user_credentials[0], user_credentials[1]
+
+        return tuple(decoded_base64_authorization_header.split(':', 1))
+
+def user_object_from_credentials(
+    self, user_email: str, user_pwd: str) -> Type[User]:
+        """returns the User instance based on his email and password.
+        Args:
+            self (_type_): Basic auth instance
+            user_email(str): user email
+            user_pwd(str): user pwd
+        """
+        if not (user_email and isinstance(user_email, str) and
+                user_pwd and isinstance(user_pwd, str)):
+            return None
+
+        try:
+            users = User.search({'email': user_email})
+        except Exception:
+            return None
+
+        for user in users:
+            if user.is_valid_password(user_pwd):
+                return user
+
+        return None
+
