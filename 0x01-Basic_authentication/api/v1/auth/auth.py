@@ -7,6 +7,7 @@ from models.user import User
 from os import getenv
 from typing import List, Type
 
+
 class Auth:
     """ Auth class
     """
@@ -28,12 +29,10 @@ class Auth:
             return None
         else:
             User().search({'id': 1})
-            
+
     def authorization_header(self, request=None) -> str:
         """ Get the authorization header from the request.
         """
         if request is None or request.headers.get('Authorization') is None:
             return None
         return request.headers.get('Authorization')
-
-
