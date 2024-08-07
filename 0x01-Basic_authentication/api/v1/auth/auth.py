@@ -35,8 +35,5 @@ class Auth:
         if request is None or request.headers.get('Authorization') is None:
             return None
         return request.headers.get('Authorization')
-            
-        
-    user = current_user(request)
-    auth_header = authorization_header(request)
+
 
