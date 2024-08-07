@@ -17,11 +17,6 @@ auth = None
 # Check environment variable to configure auth
 AUTH_TYPE = os.getenv('AUTH_TYPE')
 
-if AUTH_TYPE:
-    # Dynamically import Auth class based on AUTH_TYPE
-    from api.v1.auth.auth import Auth
-    auth = Auth()
-
 if getenv('AUTH_TYPE') == "auth":
     from api.v1.auth.auth import Auth
     auth = Auth()
