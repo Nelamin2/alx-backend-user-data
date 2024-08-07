@@ -22,6 +22,20 @@ if AUTH_TYPE:
     # Dynamically import Auth class based on AUTH_TYPE
     from api.v1.auth.auth import Auth
     auth = Auth()
+    
+@app.before_request
+def before_request():
+    if auth is None:
+        return
+    
+    # Allow access to specific paths without authentication
+    public_paths = ['/api/v1/status/', '/api/v1/unauthorized/', '/api/v1/forbidden/']
+    if request.path in public_paths:
+        return
+    
+    # Check authorization header
+    if auth.authorization_header(request) is None:
+        abort(401)
 
 @app.errorhandler(401)  # Unauthorized
 def unauthorized(error) -> str:
