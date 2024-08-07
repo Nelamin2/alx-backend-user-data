@@ -5,7 +5,7 @@ Route module for the API
 import os
 from os import getenv
 from api.v1.views import app_views
-from api.v1.auth.auth import auth
+from api.v1.auth import auth
 from flask import Flask, jsonify, abort, request
 from flask_cors import (CORS, cross_origin)
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """ Module of authentication
 """
+
 from flask import jsonify, request, abort
 from api.v1.views import app_views
 from models.user import User
