@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
-"""handle basic auth"""
+"""Handle basic auth"""
 import base64
-from typing import Tuple, TypeVar
+from typing import Tuple
 from api.v1.auth.auth import Auth
 from models.user import User
-from typing import Type
 
 
 class BasicAuth(Auth):
-    """- defines the attributes and methods for basic
-    authorization
-    - inherits from Auth
+    """Defines the attributes and methods for basic
+    authorization, inherits from Auth.
     Args:
         Auth (class): Parent authentication class
     """
@@ -18,8 +16,8 @@ class BasicAuth(Auth):
             self,
             authorization_header: str
             ) -> str:
-        """returns the Base64 part of the Authorization header
-        for a Basic Authentication
+        """Returns the Base64 part of the Authorization header
+        for a Basic Authentication.
         Args:
             authorization_header (str): auth_header
         Returns:
@@ -35,7 +33,7 @@ class BasicAuth(Auth):
             self,
             base64_authorization_header: str
             ) -> str:
-        """returns the decoded value of a Base64 string
+        """Returns the decoded value of a Base64 string.
         Args:
             base64_authorization_header (str): base64 auth header
         Returns:
@@ -50,12 +48,11 @@ class BasicAuth(Auth):
         except BaseException:
             return None
 
-
-def extract_user_credentials(
-    self,
-    decoded_base64_authorization_header: str
-    ) -> Tuple[str, str]:
-        """extracts user email and password
+    def extract_user_credentials(
+            self,
+            decoded_base64_authorization_header: str
+            ) -> Tuple[str, str]:
+        """Extracts user email and password
         from the Base64 decoded value.
         Args:
             self (obj): Basic Auth instance
@@ -68,9 +65,9 @@ def extract_user_credentials(
 
         return tuple(decoded_base64_authorization_header.split(':', 1))
 
-def user_object_from_credentials(
-    self, user_email: str, user_pwd: str) -> Type[User]:
-        """returns the User instance based on his email and password.
+    def user_object_from_credentials(
+            self, user_email: str, user_pwd: str) -> User:
+        """Returns the User instance based on their email and password.
         Args:
             self (_type_): Basic auth instance
             user_email(str): user email
@@ -90,4 +87,3 @@ def user_object_from_credentials(
                 return user
 
         return None
-
