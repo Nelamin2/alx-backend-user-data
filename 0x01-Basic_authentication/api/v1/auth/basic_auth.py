@@ -64,7 +64,7 @@ def extract_user_credentials(self, decoded_base64_authorization_header: str) -> 
             return None, None
         
         # Split the string by ':'
-        user_credentials = decoded_base64_authorization_header.split(':', 1)
+        user_credentials = tuple (decoded_base64_authorization_header.split(':', 1))
         
         # Return user email and password
-        return user_credentials[0], user_credentials[1]
+        return  user_credentials[0], user_credentials[1]
