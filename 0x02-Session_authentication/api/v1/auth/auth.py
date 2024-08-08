@@ -11,6 +11,16 @@ from typing import List, Type
 class Auth:
     """ Auth class
     """
+    def session_cookie(self, request=None):
+        """ Return a cookie value from a request """
+        if request is None:
+            return None
+        
+        cookie_name = getenv("SESSION_NAME")
+        if cookie_name is None:
+            return None
+        
+        return request.cookies.get(cookie_name)
     def require_auth(self, path: str, excluded_paths: list) -> bool:
         """Returns False if the path is in the list of excluded paths,
         otherwise returns True.
