@@ -37,14 +37,15 @@ def before_request():
         return
     request.current_user = auth.current_user(request)
 
-
+    
     # Define public paths
+    
+    path = request.path.rstrip('/')
     public_paths = ['/api/v1/status',
                     '/api/v1/unauthorized', '/api/v1/forbidden']
 
     if request.path in public_paths:
         return
-
     # Check authorization header
     if auth.authorization_header(request) is None:
         abort(401)  # Unauthorized

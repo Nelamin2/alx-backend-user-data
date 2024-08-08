@@ -10,3 +10,4 @@ from os import getenv
 class SessionAuth(Auth):
     """ SessionAuth class
     """
+    pass
