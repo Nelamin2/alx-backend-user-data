@@ -5,6 +5,10 @@ from uuid import uuid4
 
 from .auth import Auth
 from models.user import User
+from flask import Blueprint
+
+login = Blueprint('session_auth', __name__, url_prefix='/api/v1/auth_session')
+
 
 
 class SessionAuth(Auth):
