@@ -19,13 +19,22 @@ class SessionAuth(Auth):
             session_id = str(uuid4())
             self.user_id_by_session_id[session_id] = user_id
             return session_id
-
+        
     def user_id_for_session_id(self, session_id: str = None) -> str:
-        """Retrieves the user id of the user associated with
-        a given session id.
-        """
-        if type(session_id) is str:
-            return self.user_id_by_session_id.get(session_id)
+        """ Return a User ID based on a Session ID """
+        if session_id is None or not isinstance(session_id, str):
+            return None
+        user_id = SessionAuth.user_id_by_session_id.get(session_id)
+        print(f"Looking up session ID: {session_id}, found user ID: {user_id}")  # Debug line
+        return user_id
+
+
+    #def user_id_for_session_id(self, session_id: str = None) -> str:
+       # """Retrieves the user id of the user associated with
+       # a given session id.
+       # """
+        #if type(session_id) is str:
+           # return self.user_id_by_session_id.get(session_id)
 
     def current_user(self, request=None) -> User:
         """Retrieves the user associated with the request.
