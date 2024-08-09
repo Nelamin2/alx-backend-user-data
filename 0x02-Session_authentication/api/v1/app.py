@@ -18,7 +18,6 @@ auth = None
 if getenv('AUTH_TYPE') == "auth":
     from api.v1.auth.auth import Auth
     auth = Auth()
-    
 elif getenv('AUTH_TYPE') == "session_auth":
     from api.v1.auth.session_auth import SessionAuth
     auth = SessionAuth()
@@ -31,29 +30,24 @@ elif getenv('AUTH_TYPE') == "basic_auth":
 @app.before_request
 def before_request():
     """handler for all requests"""
-    
-    
+
     if auth is None:
         return
     request.current_user = auth.current_user(request)
 
-    
-    # Define public paths
-    
     path = request.path.rstrip('/')
     public_paths = ['/api/v1/status',
-                    '/api/v1/unauthorized', '/api/v1/forbidden', '/api/v1/auth_session/login']
+                    '/api/v1/unauthorized',
+                    '/api/v1/forbidden', '/api/v1/auth_session/login']
 
     if request.path in public_paths:
         return
     # Check authorization header
     if auth.authorization_header(request) is None:
         abort(401)  # Unauthorized
-    
-    if (
-    auth.authorization_header(request) is None
-    and auth.session_cookie(request) is None
-):
+    if auth.authorization_header(request) is None:
+        abort(401)
+    if auth.session_cookie(request) is None:
         abort(401)
 
     # Check current user
