@@ -29,6 +29,7 @@ def get_auth_instance(auth_type):
         return BasicAuth()
     return None
 
+
 auth_type = getenv('AUTH_TYPE')
 auth = get_auth_instance(auth_type)
 
@@ -53,8 +54,9 @@ def before_request():
         return
 
     # Check authorization header and session cookie
-    if auth.authorization_header(request) is None and auth.session_cookie(request) is None:
-        abort(401)  # Unauthorized
+    if auth.authorization_header(request) is None and \
+       auth.session_cookie(request) is None:
+        abort(401)
 
     request.current_user = auth.current_user(request)
 
@@ -85,4 +87,3 @@ if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
     port = getenv("API_PORT", "5000")
     app.run(host=host, port=port)
-
