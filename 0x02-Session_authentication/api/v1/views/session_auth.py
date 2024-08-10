@@ -28,7 +28,6 @@ def session_auth_login():
     # If no user is found for this email
     if not user_list:
         return jsonify({"error": "no user found for this email"}), 404
-
     user = user_list[0]
 
     # Check if the password is correct
