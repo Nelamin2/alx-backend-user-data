@@ -1,42 +1,35 @@
 #!/usr/bin/env python3
+"""Route module for the API.
 """
-Route module for the API
-"""
+import os
 from os import getenv
-from api.v1.views import app_views
 from flask import Flask, jsonify, abort, request
-from flask_cors import CORS
+from flask_cors import (CORS, cross_origin)
+
+from api.v1.views import app_views
+from api.v1.auth.auth import Auth
+from api.v1.auth.basic_auth import BasicAuth
+from api.v1.auth.session_auth import SessionAuth
+#from api.v1.auth.session_db_auth import SessionDBAuth
+from api.v1.auth.session_exp_auth import SessionExpAuth
 
 
 app = Flask(__name__)
-
-print("Registering blueprints...")
 app.register_blueprint(app_views)
-print("Blueprint registered.")
-
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
+
 auth = None
-
-
-def get_auth_instance(auth_type):
-    """
-    Returns an instance of the appropriate authentication class.
-    """
-    if auth_type == "auth":
-        from api.v1.auth.auth import Auth
-        return Auth()
-    elif auth_type == "session_auth":
-        from api.v1.auth.session_auth import SessionAuth
-        return SessionAuth()
-    elif auth_type == "basic_auth":
-        from api.v1.auth.basic_auth import BasicAuth
-        return BasicAuth()
-    return None
-
-
-auth_type = getenv('AUTH_TYPE')
-auth = get_auth_instance(auth_type)
-
+auth_type = getenv('AUTH_TYPE', 'auth')
+if auth_type == 'auth':
+    auth = Auth()
+if auth_type == 'basic_auth':
+    auth = BasicAuth()
+if auth_type == 'session_auth':
+    auth = SessionAuth()
+if auth_type == 'session_exp_auth':
+    auth = SessionExpAuth()
+#if auth_type == 'session_db_auth':
+  #  auth = SessionDBAuth()
 
 @app.before_request
 def before_request():
@@ -90,4 +83,4 @@ def not_found(error) -> str:
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
     port = getenv("API_PORT", "5000")
-    app.run(host=host, port=port)
+    app.run(host=host, port=port, debug=True)

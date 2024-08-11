@@ -1,4 +1,4 @@
-# api/v1/auth/session_exp_auth.py
+#!/usr/bin/env python3
 
 import os
 from datetime import datetime, timedelta
