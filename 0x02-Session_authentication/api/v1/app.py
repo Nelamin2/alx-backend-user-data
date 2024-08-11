@@ -9,7 +9,11 @@ from flask_cors import CORS
 
 
 app = Flask(__name__)
+
+print("Registering blueprints...")
 app.register_blueprint(app_views)
+print("Blueprint registered.")
+
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 auth = None
 

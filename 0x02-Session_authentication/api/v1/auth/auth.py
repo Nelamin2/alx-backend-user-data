@@ -2,7 +2,6 @@
 """ Module of authentication
 """
 from flask import jsonify, request, abort
-from api.v1.views import app_views
 from models.user import User
 from os import getenv
 from typing import List, Type
