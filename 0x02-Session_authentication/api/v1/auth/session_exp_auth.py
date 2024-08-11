@@ -1,5 +1,6 @@
-#!/usr/bin/env python3
-
+#! /usr/bin/env python3
+""" SessionExpAuth module
+"""
 import os
 from datetime import datetime, timedelta
 from api.v1.auth.session_auth import SessionAuth
@@ -7,6 +8,7 @@ from api.v1.auth.session_auth import SessionAuth
 class SessionExpAuth(SessionAuth):
     def __init__(self):
         """Initialize the SessionExpAuth class"""
+        self.session_duration = 0
         super().__init__()
         try:
             self.session_duration = int(os.getenv('SESSION_DURATION', 0))
