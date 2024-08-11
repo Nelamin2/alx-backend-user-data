@@ -6,6 +6,11 @@ from datetime import datetime, timedelta
 from api.v1.auth.session_auth import SessionAuth
 
 class SessionExpAuth(SessionAuth):
+    """_summary_
+
+    Args:
+        SessionAuth (_type_): _description_
+    """
     def __init__(self):
         """Initialize the SessionExpAuth class"""
         self.session_duration = 0
