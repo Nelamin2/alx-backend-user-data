@@ -10,8 +10,10 @@ import uuid
 TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%S"
 DATA = {}
 
+# Define a TypeVar for self-references
+T = TypeVar('T', bound='Base')
 
-class Base():
+class Base:
     """ Base class
     """
 
@@ -34,23 +36,23 @@ class Base():
         else:
             self.updated_at = datetime.utcnow()
 
-    def __eq__(self, other: TypeVar('Base')) -> bool:
+    def __eq__(self, other: T) -> bool:
         """ Equality
         """
         if type(self) != type(other):
             return False
         if not isinstance(self, Base):
             return False
-        return (self.id == other.id)
+        return self.id == other.id
 
     def to_json(self, for_serialization: bool = False) -> dict:
-        """ Convert the object a JSON dictionary
+        """ Convert the object to a JSON dictionary
         """
         result = {}
         for key, value in self.__dict__.items():
             if not for_serialization and key[0] == '_':
                 continue
-            if type(value) is datetime:
+            if isinstance(value, datetime):
                 result[key] = value.strftime(TIMESTAMP_FORMAT)
             else:
                 result[key] = value
@@ -61,28 +63,34 @@ class Base():
         """ Load all objects from file
         """
         s_class = cls.__name__
-        file_path = ".db_{}.json".format(s_class)
+        file_path = f".db_{s_class}.json"
         DATA[s_class] = {}
         if not path.exists(file_path):
             return
 
-        with open(file_path, 'r') as f:
-            objs_json = json.load(f)
-            for obj_id, obj_json in objs_json.items():
-                DATA[s_class][obj_id] = cls(**obj_json)
+        try:
+            with open(file_path, 'r') as f:
+                objs_json = json.load(f)
+                for obj_id, obj_json in objs_json.items():
+                    DATA[s_class][obj_id] = cls(**obj_json)
+        except (IOError, json.JSONDecodeError) as e:
+            print(f"Error loading from file: {e}")
 
     @classmethod
     def save_to_file(cls):
         """ Save all objects to file
         """
         s_class = cls.__name__
-        file_path = ".db_{}.json".format(s_class)
+        file_path = f".db_{s_class}.json"
         objs_json = {}
         for obj_id, obj in DATA[s_class].items():
             objs_json[obj_id] = obj.to_json(True)
 
-        with open(file_path, 'w') as f:
-            json.dump(objs_json, f)
+        try:
+            with open(file_path, 'w') as f:
+                json.dump(objs_json, f)
+        except IOError as e:
+            print(f"Error saving to file: {e}")
 
     def save(self):
         """ Save current object
@@ -108,29 +116,31 @@ class Base():
         return len(DATA[s_class].keys())
 
     @classmethod
-    def all(cls) -> Iterable[TypeVar('Base')]:
+    def all(cls) -> List[T]:
         """ Return all objects
         """
         return cls.search()
 
     @classmethod
-    def get(cls, id: str) -> TypeVar('Base'):
+    def get(cls, id: str) -> T:
         """ Return one object by ID
         """
         s_class = cls.__name__
         return DATA[s_class].get(id)
 
     @classmethod
-    def search(cls, attributes: dict = {}) -> List[TypeVar('Base')]:
+    def search(cls, attributes: dict = {}) -> List[T]:
         """ Search all objects with matching attributes
         """
         s_class = cls.__name__
+
         def _search(obj):
-            if len(attributes) == 0:
+            if not attributes:
                 return True
             for k, v in attributes.items():
-                if (getattr(obj, k) != v):
+                if getattr(obj, k, None) != v:
                     return False
             return True
-        
-        return list(filter(_search, DATA[s_class].values()))
+
+        return [obj for obj in DATA.get(s_class, {}).values() if _search(obj)]
+

@@ -57,3 +57,12 @@ class User(Base):
             return "{}".format(self.last_name)
         else:
             return "{} {}".format(self.first_name, self.last_name)
+
+# Create a new user instance
+new_user = User(email='test@example.com', _password='password123')
+
+# Save the user
+new_user.save()
+
+# Check if the user is stored
+print(User.get(new_user.id))  # Should print the user instance
