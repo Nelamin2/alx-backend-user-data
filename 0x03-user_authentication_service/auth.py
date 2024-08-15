@@ -20,6 +20,13 @@ def _hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
 
+def _generate_uuid() -> str:
+    """Returns string repr of a new UUID
+    Use uuid module
+    """
+    return str(uuid.uuid4())
+
+
 class Auth:
     """Auth class to interact with the authentication database
     """
@@ -55,19 +62,13 @@ class Auth:
             pass
         return False
 
-    def _generate_uuid() -> str:
-        """Returns string repr of a new UUID
-        Use uuid module
+    def create_session(self, email: str) -> str:
+        """Takes email string argument
+        Returns the session ID as a string
+        Find user corresponding to email, generate new UUID
+        store in database as users session_id, return session ID
         """
-        return str(uuid.uuid4())
-
-        def create_session(self, email: str) -> str:
-            """Takes email string argument
-            Returns the session ID as a string
-            Find user corresponding to email, generate new UUID
-            store in database as users session_id, return session ID
-            """
-            session_id = self._generate_uuid()
+        session_id = self._generate_uuid()
         try:
             user = self._db.find_user_by(email=email)
             self._db.update_user(user.id, session_id=session_id)
