@@ -60,3 +60,17 @@ class Auth:
         Use uuid module
         """
         return str(uuid.uuid4())
+
+    def create_session(self, email: str) -> str:
+        """Takes email string argument
+        Returns the session ID as a string
+        Find user corresponding to email, generate new UUID
+        store in database as users session_id, return session ID
+        """
+        session_id = _generate_uuid()
+        try:
+            user = self._db.find_user_by(email=email)
+            self._db.update_user(user.id, session_id=session_id)
+            return session_id
+        except NoResultFound:
+            return None
