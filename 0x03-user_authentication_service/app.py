@@ -19,4 +19,3 @@ def welcome() -> str:
     Returns welcome message
     """
     return jsonify({"message": "Bienvenue"})
-
