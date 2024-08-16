@@ -48,4 +48,4 @@ def login():
     response = make_response(jsonify({"email": user_email,
                                       "message": "logged in"}))
     response.set_cookie('session_id', AUTH.create_session(user_email))
-    return respons
+    return response
